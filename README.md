@@ -1,2 +1,4 @@
 # mad-2025-fall-ml-git-basics
-# max fixed a bug here.
+# Maps fixed a bug here.
+# Nick Z found another bug, and corrected it.
+# Sam G found a 3rd bug. It's now squashed.
