@@ -28,7 +28,7 @@ def compute_e(precision=10):
     threshold = 10 ** (-(precision + 5))
 
     e = 1.0  # Start with 1/0! = 1
-    factorial = 0
+    factorial = 1
     n = 1
     while True:
         factorial *= n  # Compute n! incrementally. The factorials AFTER THE FIRST FACTORIAL are 1,
@@ -38,9 +38,11 @@ def compute_e(precision=10):
         if term < threshold:
             break
 
+        e += term
+
         n += 1
 
-    return e
+    return e, n
 
 
 def main():
