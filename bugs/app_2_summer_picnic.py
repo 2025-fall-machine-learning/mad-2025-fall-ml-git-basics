@@ -6,13 +6,13 @@ def pick_the_winners(raffle_tickets, raffle_names):
     randomizer = random.Random(42)
     indices = list(range(len(raffle_tickets )))
     # Added code to randomize raffles using indices
-    print(f"indices: {indices}")
+    # print(f"indices: {indices}")
     randomizer.shuffle(indices)
-    print(f"randomized indices: {indices}")
+    # print(f"randomized indices: {indices}")
     raffle_names = raffle_names[indices]
-    print(f"randomized raffle_names: {raffle_names}")
+    # print(f"randomized raffle_names: {raffle_names}")
     raffle_tickets = raffle_tickets[indices]
-    print(f"randomized raffle_tickets: {raffle_tickets}")
+    # print(f"randomized raffle_tickets: {raffle_tickets}")
 
     length = len(raffle_tickets)
     bottom_80_percent = int(length * 0.8)
