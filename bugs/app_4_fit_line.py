@@ -15,7 +15,12 @@ def fit_best_line(x, y):
 
     # Compute means
     x_mean = float(np.mean(x))
+    print(f"x_mean: {x_mean}")
     y_mean = float(np.mean(y))
+    print(f"x_mean: {y_mean}")
+
+    Sxx = 0 # Initialized Sxx
+    Sxy = 0 # Initialized Sxy
 
     # Sum of squares.
     for xi, yi in zip(x, y):
@@ -27,15 +32,20 @@ def fit_best_line(x, y):
         raise ValueError("Cannot compute slope: all x values are identical")
 
     # Least squares estimates
-    m = Sxx / Sxy
-    b = x_mean - m * y_mean
+    m = Sxy / Sxx # Flipped Sxy and Sxx
+    b = y_mean - m * x_mean # Flipped y-mean and x_mean
+
+    return m, b # Added return statement for m and b
 
 
 def main():
     """ Plot 12,000 points with R² ≈ 0.75."""
 
+    path = r'C:\\Users\\emoge\\OneDrive\\Documents\\GitHub\\mad-2025-fall-ml-git-basics\\bugs\\data_points.csv'
+    fixed_path = path.replace("\\", "/")
+
     # Read data from CSV file
-    csv_filename = 'data_points.csv'
+    csv_filename = fixed_path
     df = pd.read_csv(csv_filename)
     x = df['x'].values
     y = df['y'].values
