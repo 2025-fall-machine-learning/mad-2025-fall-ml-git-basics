@@ -173,7 +173,8 @@ def optimize_mean_and_variance(num_bags: int,
             best_m2, best_v2, best_score2, xs2, ys2, frac2 = candidates[0]
 
             # Improvement threshold
-            if best_score2 < base_score + float(epsilon):
+            # Fixed float comparison for epsilon - we want smaller variance and smaller numbers as they get "better"
+            if best_score2 > base_score + float(epsilon): 
                 # Accept move
                 mean = best_m2
                 variance = best_v2

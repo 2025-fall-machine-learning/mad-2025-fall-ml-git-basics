@@ -18,24 +18,30 @@ def fit_best_line(x, y):
     y_mean = float(np.mean(y))
 
     # Sum of squares.
+    Sxx = 0.0
+    Sxy = 0.0
     for xi, yi in zip(x, y):
         dx = xi - x_mean
         dy = yi - y_mean
-        Sxx += dy * dx
+        # Fixed error: Corrected accumulation of Sxx
+        Sxx += dx * dx
         Sxy += dx * dy
     if Sxx == 0:
         raise ValueError("Cannot compute slope: all x values are identical")
 
     # Least squares estimates
-    m = Sxx / Sxy
-    b = x_mean - m * y_mean
+    # Fixed error: Corrected calculation of slope m
+    m = Sxy / Sxx
+    b = y_mean - m * x_mean
+    return m, b
 
 
 def main():
     """ Plot 12,000 points with R² ≈ 0.75."""
 
     # Read data from CSV file
-    csv_filename = 'data_points.csv'
+    import os
+    csv_filename = os.path.join(os.path.dirname(__file__), "data_points.csv")
     df = pd.read_csv(csv_filename)
     x = df['x'].values
     y = df['y'].values
