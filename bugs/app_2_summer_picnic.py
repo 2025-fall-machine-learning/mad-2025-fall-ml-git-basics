@@ -6,16 +6,12 @@ def pick_the_winners(raffle_tickets, raffle_names):
     # Altered to use indices to keep names and tickets aligned
     randomizer = random.Random(42)
 
-    # Altered to use indices to keep names and tickets aligned
-    randomizer = random.Random(42)
-
     # Generate a shuffled index list
     indices = list(range(len(raffle_tickets)))
     randomizer.shuffle(indices)
 
     # Reorder both arrays with the same index permutation
-    raffle_tickets = raffle_tickets[indices]
-    raffle_names = raffle_names[indices]
+
 
     # print(f"Debugging shuffled tickets: {raffle_tickets}")
     # print(f"Debugging shuffled names:   {raffle_names}")
@@ -25,6 +21,7 @@ def pick_the_winners(raffle_tickets, raffle_names):
     # Blanca here: The following will randomize the order of the tickets and names separately.
     # The names should stay coordinated with the ticket numbers. Use indices instead. Please
     # complete. I have to run on a business trip now. Sorry to leave you hanging.
+    # BUGFIXED CODE BELOW: Added use of indices to keep names and tickets aligned.
     raffle_tickets = raffle_tickets[indices]
     print(f"Debugging shuffled tickets: {raffle_tickets}")
     raffle_names = raffle_names[indices]
