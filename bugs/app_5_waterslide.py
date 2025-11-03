@@ -173,7 +173,7 @@ def optimize_mean_and_variance(num_bags: int,
             best_m2, best_v2, best_score2, xs2, ys2, frac2 = candidates[0]
 
             # Improvement threshold
-            if best_score2 < base_score + float(epsilon):
+            if best_score2 > base_score + float(epsilon): # <- changed < to > because we need to look for a smaller number in variants and numbers
                 # Accept move
                 mean = best_m2
                 variance = best_v2
@@ -245,7 +245,7 @@ def main() -> None:
 
     # Initial settings: worst-case variance and off-target mean
     init_variance = 7.5
-    init_mean = (2.85, -2.85)
+    init_mean = (2.85, -2.85) 
 
     # Optimizer parameters
     pause_seconds = 0.3  # Comfortable viewing speed
