@@ -18,17 +18,22 @@ def fit_best_line(x, y):
     y_mean = float(np.mean(y))
 
     # Sum of squares.
+    Sxx=0
+    Sxy=0
     for xi, yi in zip(x, y):
+        # print (f"xi: {xi}, yi: {yi}")  # Debugging output
         dx = xi - x_mean
         dy = yi - y_mean
-        Sxx += dy * dx
-        Sxy += dx * dy
+        Sxx += dx * dx
+        Sxy += dy * dx
+        # print(f"xi: {xi}, yi: {yi} dx: {dx}, dy: {dy}, Sxx: {Sxx}, Sxy: {Sxy}")  # Debugging output
     if Sxx == 0:
         raise ValueError("Cannot compute slope: all x values are identical")
 
     # Least squares estimates
-    m = Sxx / Sxy
-    b = x_mean - m * y_mean
+    m =  Sxy / Sxx
+    b = y_mean - (m * x_mean)
+    return m, b
 
 
 def main():
@@ -45,6 +50,7 @@ def main():
     m, b = fit_best_line(x, y)
     x_line = np.linspace(x.min(), x.max(), 500)
     y_line = m * x_line + b
+    print(f" {m}, {b}")
 
     # Create the plot
     plt.figure(figsize=(10, 6))
