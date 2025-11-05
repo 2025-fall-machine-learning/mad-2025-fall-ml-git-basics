@@ -26,7 +26,7 @@ def fit_best_line(x, y):
     for xi, yi in zip(x, y):
         dx = xi - x_mean
         dy = yi - y_mean
-        Sxx += dy * dx
+        Sxx += dx * dx # Changed dy to dx
         Sxy += dx * dy
     if Sxx == 0:
         raise ValueError("Cannot compute slope: all x values are identical")
