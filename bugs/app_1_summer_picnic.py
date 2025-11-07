@@ -12,6 +12,7 @@ def pick_the_winners(raffle_tickets):
     #print(f'bottom 80 percent: {bottom_80_percent}, top 20 percent: {top_20_percent}')
     eliminated = raffle_tickets[:bottom_80_percent]
     #print(f'Eliminated tickets are: {eliminated}')
+    # BUGFIX: Adjusted slicing to correctly select winners
     keychain_winners = raffle_tickets[bottom_80_percent:]
     top_3_winners = raffle_tickets[-3:]
     print(f'Keychain winners are: {keychain_winners}')
