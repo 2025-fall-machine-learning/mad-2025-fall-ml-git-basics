@@ -31,8 +31,8 @@ def fit_best_line(x, y):
         raise ValueError("Cannot compute slope: all x values are identical")
 
     # Least squares estimates
+    # BUGFIX: Corrected the formulas for slope (m) and intercept (b), was previously inverted.
     # BUGFIX: Added missing return statement
-    # BUGFIX: Corrected the formulas for slope (m) and intercept (b)
     m = Sxy / Sxx
     b = y_mean - m * x_mean
     return m, b
