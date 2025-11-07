@@ -16,8 +16,7 @@ def pick_the_winners(raffle_tickets, raffle_names):
     # complete. I have to run on a business trip now. Sorry to leave you hanging.
     # Use the shuffled `indices` to permute both collections identically so
     # each name stays attached to its original ticket number.
-    # Introduced a new variable 'perm' 
-
+    # Introduced a new variable 'perm' to permute both tickets and names identically so when winners are selected the names stay paired with their ticket numbers.
     perm = np.array(indices)
     shuffled_tickets = np.array(raffle_tickets)[perm]
     shuffled_names = np.array(raffle_names)[perm]
