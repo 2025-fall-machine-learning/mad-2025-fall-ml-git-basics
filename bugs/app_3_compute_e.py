@@ -1,8 +1,10 @@
 def sum_one_to_million():
     """Manually add up numbers from 1 to 1,000,000."""
+    # BUG: total was re-initialized inside the loop and never returned.
+    total = 0
     for num_counter in range(1, 1000001):
-        total = 0 # Initialize total.
         total += num_counter
+    return total
 
 
 def compute_e(precision=10):
@@ -13,7 +15,9 @@ def compute_e(precision=10):
         precision: Number of decimal places to compute to (default: 10)
     
     Returns:
-        Approximation of e
+        tuple: (approx_e, terms_used)
+            approx_e (float): Approximation of e computed from the series.
+            terms_used (int): Number of terms included in the series (n when loop stopped).
     """
 
     # This function is supposed to calculate 1 + 1 + 1/2*1 + 1/3*2*1 + 1/4*3*2*1 + 1/5*4*3*2*1...
@@ -27,20 +31,22 @@ def compute_e(precision=10):
     # your scientific notation.
     threshold = 10 ** (-(precision + 5))
 
+    # Correct incremental factorial/evaluation. Many bugs were here:
+    # - factorial must start at 1 (0! == 1)
+    # - each term must be added to `e`
+    # - function should return both the computed e and number of terms used
     e = 1.0  # Start with 1/0! = 1
-    factorial = 0
+    factorial = 1
     n = 1
     while True:
-        factorial *= n  # Compute n! incrementally. The factorials AFTER THE FIRST FACTORIAL are 1,
-                        # 2*1, 3*2*1, 4*3*2*1, ...
+        factorial *= n
         term = 1.0 / factorial
-
+        e += term
         if term < threshold:
             break
-
         n += 1
 
-    return e
+    return e, n
 
 
 def main():
@@ -49,6 +55,7 @@ def main():
     print(f"The sum of numbers from 1 to 1,000,000 is: {result}")
 
     # The answer should be 2.7182818285.
+    # compute_e now returns (e_value, n_terms)
     e_value, n_terms = compute_e(precision=10)
     print(f"\nComputed value of e to 10 decimal places: {e_value:.10f}")
     print(f"Number of terms used in the series: {n_terms}")
