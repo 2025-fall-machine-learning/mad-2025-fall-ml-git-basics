@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import os
 
 
 def fit_best_line(x, y):
@@ -18,24 +19,29 @@ def fit_best_line(x, y):
     y_mean = float(np.mean(y))
 
     # Sum of squares.
+    # Correction setting Sxx and Sxy to float
+    # Correction in for loop with Sxx and Sxy calculations
+    Sxx = 0.0
+    Sxy = 0.0
     for xi, yi in zip(x, y):
         dx = xi - x_mean
         dy = yi - y_mean
-        Sxx += dy * dx
+        Sxx += dx * dx
         Sxy += dx * dy
     if Sxx == 0:
         raise ValueError("Cannot compute slope: all x values are identical")
 
     # Least squares estimates
-    m = Sxx / Sxy
-    b = x_mean - m * y_mean
+    m = Sxy / Sxx
+    b = y_mean - m * x_mean
+    return m, b
 
 
 def main():
     """ Plot 12,000 points with R² ≈ 0.75."""
 
     # Read data from CSV file
-    csv_filename = 'data_points.csv'
+    csv_filename = os.path.join(os.path.dirname(__file__),'data_points.csv')
     df = pd.read_csv(csv_filename)
     x = df['x'].values
     y = df['y'].values
