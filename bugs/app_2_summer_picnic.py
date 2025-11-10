@@ -12,8 +12,11 @@ def pick_the_winners(raffle_tickets, raffle_names):
     # Blanca here: The following will randomize the order of the tickets and names separately.
     # The names should stay coordinated with the ticket numbers. Use indices instead. Please
     # complete. I have to run on a business trip now. Sorry to leave you hanging.
-    randomizer.shuffle(raffle_tickets)
-    randomizer.shuffle(raffle_names)
+    perm = np.array(indices)
+    shuffled_tickets = np.array(raffle_tickets)[perm]
+    shuffled_names = np.array(raffle_names)[perm]
+    # print("Shuffled tickets:", shuffled_tickets)
+    # print("Shuffled names:", shuffled_names)
     eliminated_tickets = raffle_tickets[:bottom_80_percent]
     eliminated_names = raffle_names[:bottom_80_percent]
     keychain_winner_numbers = raffle_tickets[-top_20_percent:]
