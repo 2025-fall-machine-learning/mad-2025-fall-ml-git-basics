@@ -1,8 +1,9 @@
 def sum_one_to_million():
     """Manually add up numbers from 1 to 1,000,000."""
+    total = 0
     for num_counter in range(1, 1000001):
-        total = 0 # Initialize total.
         total += num_counter
+    return total
 
 
 def compute_e(precision=10):
@@ -27,14 +28,16 @@ def compute_e(precision=10):
     # your scientific notation.
     threshold = 10 ** (-(precision + 5))
 
+    # Correction: set facotial to 1 initially, since 0! = 1
     e = 1.0  # Start with 1/0! = 1
-    factorial = 0
+    factorial = 1
     n = 1
     while True:
         factorial *= n  # Compute n! incrementally. The factorials AFTER THE FIRST FACTORIAL are 1,
                         # 2*1, 3*2*1, 4*3*2*1, ...
         term = 1.0 / factorial
-
+        e += term
+        
         if term < threshold:
             break
 
@@ -48,10 +51,9 @@ def main():
     result = sum_one_to_million()
     print(f"The sum of numbers from 1 to 1,000,000 is: {result}")
 
-    # The answer should be 2.7182818285.
-    e_value, n_terms = compute_e(precision=10)
+    # Correction: The answer should be 2.7182818285.
+    e_value = compute_e(precision=10)
     print(f"\nComputed value of e to 10 decimal places: {e_value:.10f}")
-    print(f"Number of terms used in the series: {n_terms}")
 
 
 if __name__ == "__main__":
