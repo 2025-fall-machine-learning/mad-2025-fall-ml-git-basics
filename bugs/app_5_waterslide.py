@@ -97,9 +97,12 @@ def optimize_mean_and_variance(num_bags: int,
             mean_dist = float(np.sqrt(mx*mx + my*my))
             if mean_dist > float(target_mean_tolerance):
                 penalty -= 200.0 + (mean_dist - float(target_mean_tolerance))
-        # If constraints satisfied, prefer lower variance
+        # If constraints satisfied, prefer lower variance. Return a large
+        # positive score that prefers lower variance so that higher-is-better
+        # holds consistently. When constraints are violated, return a
+        # large negative penalty.
         if penalty == 0.0:
-            return -float(v)
+            return 1000.0 - float(v)
         return penalty
 
     def estimate_objective(m: np.ndarray, v: float, reps: int) -> tuple[float, np.ndarray, np.ndarray, float]:
@@ -117,7 +120,7 @@ def optimize_mean_and_variance(num_bags: int,
                 frac_keep = compute_in_pool_fraction(xs, ys, pool_radius)
             else:
                 # Prefer satisfying goals; else higher fraction
-                if (target_radius or target_mean_tolerance):
+                if (target_radius is not None) or (target_mean_tolerance is not None):
                     if goals_met_for_samples(xs, ys) and not goals_met_for_samples(xs_keep, ys_keep):
                         xs_keep, ys_keep = xs, ys
                         frac_keep = compute_in_pool_fraction(xs, ys, pool_radius)
@@ -168,13 +171,15 @@ def optimize_mean_and_variance(num_bags: int,
                 score, xs, ys, frac = estimate_objective(mean, v2, replicates)
                 candidates.append((mean.copy(), v2, score, xs, ys, frac))
 
-            # Choose best
+            # Choose best (candidates sorted by score, high->low)
             candidates.sort(key=lambda t: t[2], reverse=True)
             best_m2, best_v2, best_score2, xs2, ys2, frac2 = candidates[0]
 
-            # Improvement threshold
-            if best_score2 < base_score + float(epsilon):
-                # Accept move
+            # Improvement threshold: accept only if the candidate score is
+            # better than the baseline by at least epsilon. The previous
+            # comparison was inverted and accepted worse solutions.
+            if best_score2 > base_score + float(epsilon):
+                # Accept move (improvement)
                 mean = best_m2
                 variance = best_v2
                 base_score = best_score2
@@ -197,7 +202,10 @@ def optimize_mean_and_variance(num_bags: int,
         extra_iters = 0
         max_extra_iters = 200
         curr_vstep = var_steps[-1] if len(var_steps) > 0 else 0.25
-    while extra_iters < max_extra_iters:
+        # Put the while-loop inside the same block so variables like
+        # `extra_iters` and `curr_vstep` are defined when used. Previously
+        # the while was dedented which caused a NameError/logic bug.
+        while extra_iters < max_extra_iters:
             # Check goals on a fresh sample using current best params
             xs_chk, ys_chk = simulate_waterslide_landings(num_bags, best_variance, best_variance, pool_center=tuple(best_mean))
             if goals_met_for_samples(xs_chk, ys_chk):

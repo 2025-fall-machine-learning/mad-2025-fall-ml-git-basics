@@ -130,9 +130,13 @@ class App5Plot:
         num_out = int(np.sum(out_of_pool))
         percent_in_pool = (num_in_pool / len(x_positions)) * 100 if len(x_positions) > 0 else 0.0
         
-        # Determine plot limits
-        plot_limit = max(self.pool_radius * 1.5, 
-                        np.max(np.abs([x_positions, y_positions])) * 1.1 if x_positions.size else self.pool_radius)
+        # Determine plot limits. The previous use of np.abs on a Python list
+        # of arrays could produce unexpected shapes/dtypes. Compute the max abs
+        # value defensively from each axis.
+        max_abs = 0.0
+        if x_positions.size:
+            max_abs = max(np.max(np.abs(x_positions)), np.max(np.abs(y_positions)))
+        plot_limit = max(self.pool_radius * 1.5, max_abs * 1.1)
         
         # Draw background zones
         self._draw_zones(plot_limit)
@@ -243,12 +247,16 @@ class App5Plot:
                            percent_in_pool: float,
                            distances: np.ndarray) -> None:
         """Add statistics text box to the overhead view."""
+        # Guard statistics calculations in case arrays are empty
+        mean_dist = float(np.mean(distances)) if distances.size else 0.0
+        max_dist = float(np.max(distances)) if distances.size else 0.0
+
         textstr = f'Total Bags: {total}\n'
         textstr += f'In Pool: {num_in_pool} ({percent_in_pool:.1f}%)\n'
         textstr += f'On Concrete: {num_out} ({100-percent_in_pool:.1f}%)\n'
-        textstr += f'Mean Distance: {np.mean(distances):.2f}m\n'
-        textstr += f'Max Distance: {np.max(distances):.2f}m'
-        
+        textstr += f'Mean Distance: {mean_dist:.2f}m\n'
+        textstr += f'Max Distance: {max_dist:.2f}m'
+
         self.ax1.text(0.02, 0.02, textstr, transform=self.ax1.transAxes,
                      fontsize=11, verticalalignment='bottom',
                      bbox=dict(boxstyle='round', facecolor='yellow', alpha=0.8))
@@ -281,11 +289,11 @@ class App5Plot:
         if annot_mstep is not None and annot_vstep is not None:
             lines.append(f"Step (mean, var): ({annot_mstep:.3f}, {annot_vstep:.3f})")
         
-        # Goal status
-        distances = np.sqrt(x_positions**2 + y_positions**2)
-        max_dist = float(np.max(distances))
-        actual_mean_x = float(np.mean(x_positions))
-        actual_mean_y = float(np.mean(y_positions))
+        # Goal status — guard against empty input arrays to avoid exceptions
+        distances = np.sqrt(x_positions**2 + y_positions**2) if (x_positions.size and y_positions.size) else np.array([])
+        max_dist = float(np.max(distances)) if distances.size else 0.0
+        actual_mean_x = float(np.mean(x_positions)) if x_positions.size else 0.0
+        actual_mean_y = float(np.mean(y_positions)) if y_positions.size else 0.0
         actual_mean_dist = float(np.sqrt(actual_mean_x**2 + actual_mean_y**2))
         
         goals_met = True
@@ -332,7 +340,7 @@ class App5Plot:
                         label=f'Pool Edges (±{self.pool_radius}m)', alpha=0.7)
         self.ax2.axvline(self.pool_radius, color='red', linestyle='--', linewidth=2, alpha=0.7)
         
-        # Sigma lines
+        # Sigma lines 
         self.ax2.axvline(-std_x, color='orange', linestyle=':', linewidth=2,
                         label=f'±1σ (±{std_x:.2f}m)', alpha=0.7)
         self.ax2.axvline(std_x, color='orange', linestyle=':', linewidth=2, alpha=0.7)
@@ -352,10 +360,15 @@ class App5Plot:
         self.ax2.grid(axis='y', alpha=0.3)
         
         # Statistics box
-        stats_text = f'Mean: {np.mean(x_positions):.2f}m\n'
-        stats_text += f'Std Dev: {np.std(x_positions):.2f}m\n'
-        stats_text += f'Range: [{np.min(x_positions):.2f}, {np.max(x_positions):.2f}]m'
-        
+        # Defensive stats: handle empty input arrays
+        mean_x = float(np.mean(x_positions)) if x_positions.size else 0.0
+        std_x = float(np.std(x_positions)) if x_positions.size else 0.0
+        min_x = float(np.min(x_positions)) if x_positions.size else 0.0
+        max_x = float(np.max(x_positions)) if x_positions.size else 0.0
+        stats_text = f'Mean: {mean_x:.2f}m\n'
+        stats_text += f'Std Dev: {std_x:.2f}m\n'
+        stats_text += f'Range: [{min_x:.2f}, {max_x:.2f}]m'
+
         self.ax2.text(0.02, 0.98, stats_text, transform=self.ax2.transAxes,
                      fontsize=10, verticalalignment='top',
                      bbox=dict(boxstyle='round', facecolor='lightyellow', alpha=0.8))
