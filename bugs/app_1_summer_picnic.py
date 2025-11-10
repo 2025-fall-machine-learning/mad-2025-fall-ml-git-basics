@@ -11,6 +11,9 @@ def pick_the_winners(raffle_tickets):
     eliminated = raffle_tickets[:bottom_80_percent]
     keychain_winners = raffle_tickets[:top_20_percent]
     top_3_winners = raffle_tickets[:3]
+    print(length)
+    print(f"bottom_80_percent", bottom_80_percent)
+    print(f"top_20_percent", top_20_percent)
     print("Keychain winners are:", keychain_winners)
     print(f"Top 3 winners are: {top_3_winners}")
     print(f"Debugging... {raffle_tickets[0]} should not have won, and {raffle_tickets[-1]} should have won.")
