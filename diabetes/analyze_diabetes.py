@@ -134,7 +134,7 @@ def predict(diabetes_df):
 
 
 def main():
-    diabetes_csv = 'C:\\Users\\emoge\\OneDrive\\Documents\\GitHub\\mad-2025-fall-ml-the-algorithms\\2_classification\\diabetes\\pa_diabetes.csv'
+    diabetes_csv = 'C:\\Users\\emoge\\OneDrive\\Documents\\GitHub\\mad-2025-fall-ml-git-basics\\diabetes\\pa_diabetes.csv'
     diabetes_df = pd.read_csv(diabetes_csv)
     predict(diabetes_df)
 
