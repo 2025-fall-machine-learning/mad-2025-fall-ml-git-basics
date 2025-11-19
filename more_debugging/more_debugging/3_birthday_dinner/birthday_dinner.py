@@ -10,8 +10,7 @@ def eat_and_open(dinner_and_gifts):
             dinner_and_gifts[1].append("tennis balls")
             dinner_and_gifts[1].append("sweatband")
     
-        return dinner_and_gifts
-
+    return dinner_and_gifts
 
 def main():
     """Main function to create and populate dinner and gifts lists."""
@@ -19,7 +18,6 @@ def main():
     dinner_and_gifts = eat_and_open(dinner_and_gifts)
     
     print(dinner_and_gifts)
-
 
 if __name__ == "__main__":
     main()
