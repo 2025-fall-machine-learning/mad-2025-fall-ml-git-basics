@@ -79,7 +79,7 @@ def main():
         print(f"\nRoot Mean Squared Error (RMSE) on test set: {rmse:.6f}\n")
         rmse_values.append(rmse)
 
-    avg_rmse = ???
+    avg_rmse = sum(rmse_values) / len(rmse_values)
     print(f"=== Average RMSE across {len(rmse_values)} folds: {avg_rmse:.6f} ===")
 
 
